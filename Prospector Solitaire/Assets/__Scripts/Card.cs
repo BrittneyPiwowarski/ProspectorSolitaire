@@ -3,7 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Card : MonoBehaviour {
-	// This will be defined later
+    [Header("Set Dynamically")]
+    public string suit; // SUit of the card (C, D, H, or S)
+    public int rank; // Rank of the card (1-14)
+    public Color color = Color.black; // color to tink pips
+    public string colS = "Black"; // or "Red". Name of the color
+
+    // This list holds all of the Decorator GaeObjects
+    public List<GameObject> decoGOs = new List<GameObject>();
+    public GameObject back; // The GameObject of the back of the card
+    public CardDefinition def; // Parsed from the DeckXML.xml
 }
 
 [System.Serializable] // A serializable class is able to be edited in the Inspector
