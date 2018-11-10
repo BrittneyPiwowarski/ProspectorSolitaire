@@ -319,5 +319,27 @@ public class Deck : MonoBehaviour {
         card.back = _tGO;
         // Default to face up
         card.faceUp = startFaceUp; // Use the property faceUp of card
+
+    }
+
+    // Shuff the cards in Deck.cards
+    static public void Shuffle(ref List<Card> oCards){
+        // Create a temporary List to hold the new shuffle order
+        List<Card> tCards = new List<Card>();
+
+        int ndx; // This will hold the index of the card to be moved
+        tCards = new List<Card>(); // Initialize the temporary list
+
+        // Repeat as long as there are cards in the origional List
+        while (oCards.Count > 0){
+            // Pick the index of a random card
+            ndx = Random.Range(0, oCards.Count);
+            // Add that card to the temporary list
+            tCards.Add(oCards[ndx]);
+            // And remove that card from the origional lsit
+            oCards.RemoveAt(ndx);
+        }
+        // Replace the origional list with the temporary list
+        oCards = tCards;
     }
 }
