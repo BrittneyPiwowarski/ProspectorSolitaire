@@ -17,6 +17,58 @@ public class Card : MonoBehaviour {
     public GameObject back; // The GameObject of the back of the card
     public CardDefinition def; // Parsed from the DeckXML.xml
 
+    // List of the SpriteRenderer Components of this GameObject and its children
+    public SpriteRenderer[] spriteRenderers;
+
+    void Start(){
+        SetSortOrder(0); // Ensures that the card starts properly depth sorted    
+    }
+
+    // If spriteRenderers is not yet defined, this function will define it
+    public void PopulateSpriteRenderers() {
+        if (spriteRenderers == null || spriteRenderers.Length == 0){
+            // Get SpriteRenderer Components of this Game Object and its children
+            spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+        }
+    }
+
+    // Sets the SortingLayerName on the SpriteRenderer Components
+    public void SetSortingLayerName(string tSLN){
+        PopulateSpriteRenderers();
+
+        foreach (SpriteRenderer tSR in spriteRenderers){
+            tSR.sortingLayerName = tSLN;
+        }
+    }
+
+    // Sets the SortingOrder on the SpriteRenderer Components
+    public void SetSortOrder(int sOrd){
+        PopulateSpriteRenderers();
+
+        //Iterate through all the spriteRenderers as tSR
+        foreach (SpriteRenderer tSR in spriteRenderers){
+            if (tSR.gameObject == this.gameObject){
+                // If the gameObject is this.gameObject, its the background
+                tSR.sortingOrder = sOrd;
+                continue; // Continue the next iteration of the loop
+            }
+
+            //switch based on the names
+            switch(tSR.gameObject.name){
+                case "back":
+                    // Set to the highest layer to cover the other sprites 
+                    tSR.sortingOrder = sOrd + 2;
+                    break;
+
+                case "face":
+                default:
+                    // Set it to the middle layer to be above the background
+                    tSR.sortingOrder = sOrd + 1;
+                    break;
+            }
+        }
+    }
+
     public bool faceUp{
         get{
             return (!back.activeSelf);
