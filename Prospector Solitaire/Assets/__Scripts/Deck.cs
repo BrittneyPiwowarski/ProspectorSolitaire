@@ -158,6 +158,7 @@ public class Deck : MonoBehaviour {
 
         // Iterate through all of the card names that were just made
         for (int i = 0; i < cardNames.Count; i++){
+            Debug.Log("test");
             // Make the card and add it to the cards Deck
             cards.Add(MakeCard(i));
         }

@@ -11,6 +11,9 @@ public class Card : MonoBehaviour {
 
     // This list holds all of the Decorator GaeObjects
     public List<GameObject> decoGOs = new List<GameObject>();
+    // This list holds all of the Pip GameObjects
+    public List<GameObject> pipGOs = new List<GameObject>();
+
     public GameObject back; // The GameObject of the back of the card
     public CardDefinition def; // Parsed from the DeckXML.xml
 }
