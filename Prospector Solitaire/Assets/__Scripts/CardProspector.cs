@@ -20,13 +20,11 @@ public class CardProspector : Card { // CardProspector extends Card
     // The SlotDef class stores info pulled from the Layout XML <slot>
     public SlotDef slotDef;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    // This allows the card to react to being clicked
+    public override void OnMouseUpAsButton(){
+        //Call the CardClicked method on the Prospector Singleton
+        Prospector.S.CardClicked(this);
+        base.OnMouseUpAsButton();
+    }
 }

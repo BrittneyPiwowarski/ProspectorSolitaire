@@ -77,6 +77,11 @@ public class Card : MonoBehaviour {
             back.SetActive(!value);
         }
     }
+
+    // Virtual methods can be overridden by subclass methods with the same name 
+    virtual public void OnMouseUpAsButton(){
+        print(name);
+    }
 }
 
 [System.Serializable] // A serializable class is able to be edited in the Inspector
@@ -95,4 +100,5 @@ public class CardDefinition{
     public int rank; // The rank (1-13) of this card
     public List<Decorator> pips = new List<Decorator>(); // Pips used
 }
+
 
