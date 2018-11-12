@@ -200,6 +200,7 @@ public class Prospector : MonoBehaviour {
                 MoveToDiscard(target);
                 MoveToTarget(Draw());
                 UpdateDrawPile();
+                ScoreManager.EVENT(eScoreEvent.draw);
                 break;
 
             case eCardState.tableau:
@@ -218,8 +219,52 @@ public class Prospector : MonoBehaviour {
                 tableau.Remove(cd); //  Remove it from the tableau List
                 MoveToTarget(cd); // Make it the target card
                 SetTableauFaces(); // Update tableau card face-ups
+                ScoreManager.EVENT(eScoreEvent.mine);
                 break;
+
         }
+
+        // Check to see wether game is over or not
+        CheckForGameOver();
+    }
+
+    // Check whether game is over
+    private void CheckForGameOver(){
+        // If tableau is empty, the game is over
+        if (tableau.Count == 0){
+            // Call game over with a win
+            GameOver(true);
+            return;
+        }
+
+        // If there are still cards in the drawpile, the game's not over
+        if (drawPile.Count > 0){
+            return;
+        }
+
+        // Check for remaining valid plays
+        foreach (CardProspector cd in tableau){
+            if (AdjacentRank(cd, target)){
+                // If there's a valid play, the game is not over
+                return;
+            }
+        }
+        // Since there are no valid plays, the game is over
+        GameOver(false);
+    }
+
+    // Called when the game is over
+    void GameOver(bool won){
+        if (won){
+            // print("You won");
+            ScoreManager.EVENT(eScoreEvent.gameWin);
+        }
+        else {
+            //print("You lost");
+            ScoreManager.EVENT(eScoreEvent.gameLose);
+        }
+        // Reload the scene, resetting the game
+        SceneManager.LoadScene("Prospector_Scene0");
     }
 
     // Return true if the two cards are adjacent in rank (A & K wraparound)
