@@ -17,7 +17,8 @@ public class Prospector : MonoBehaviour {
     public Vector2 fsPosRun = new Vector2(0.5f, 0.75f);
     public Vector2 fsPosMid2 = new Vector2(0.4f, 1.0f);
     public Vector2 fsPosEnd = new Vector2(0.5f, 0.95f);
-    public float reloadDelay = 2f; // 2 sec delay between rounds
+    public float reloadDelay = 10f; 
+    public Text gameOverText, roundResultText, highScoreText;
 
     [Header("Set Dynamically")]
     public Deck deck;
@@ -30,7 +31,40 @@ public class Prospector : MonoBehaviour {
     public FloatingScore fsRun;
 
     void Awake(){
-        S = this; // Set up a Singleton for Prospector    
+        S = this; // Set up a Singleton for Prospector 
+        SetUpUITexts();
+    }
+
+    void SetUpUITexts(){
+        // Set up the Highscore UI Text
+        GameObject go = GameObject.Find("Highscore");
+        if (go != null){
+            highScoreText = go.GetComponent<Text>();
+        }
+        int highScore = ScoreManager.HIGH_SCORE;
+        string hScore = "High Score: " + Utils.AddCommasToNumber(highScore);
+        go.GetComponent<Text>().text = hScore;
+
+        // Set up the UI Texts that show at the end of the round
+        go = GameObject.Find("GameOver");
+        if (go != null)
+        {
+            gameOverText = go.GetComponent<Text>();
+        }
+
+        go = GameObject.Find("RoundResult");
+        if (go != null)
+        {
+            roundResultText = go.GetComponent<Text>();
+        }
+
+        // Make the end of round texts invisible
+        ShowResultsUI(false);
+    }
+
+    void ShowResultsUI(bool show){
+        gameOverText.gameObject.SetActive(show);
+        roundResultText.gameObject.SetActive(show);
     }
 
     void Start()
@@ -265,13 +299,27 @@ public class Prospector : MonoBehaviour {
 
     // Called when the game is over
     void GameOver(bool won){
+        int score = ScoreManager.SCORE;
+        Debug.Log(score);
+        if (fsRun != null) score += fsRun.score;
+
         if (won){
-            // print("You won");
+            gameOverText.text = "Round Over";
+            roundResultText.text = "You won this round!\nRoundScore: " + score;
+            ShowResultsUI(true);
             ScoreManager.EVENT(eScoreEvent.gameWin);
             FloatingScoreHandler(eScoreEvent.gameWin);
         }
         else {
-            //print("You lost");
+            gameOverText.text = "Game Over";
+            if (ScoreManager.HIGH_SCORE <= score){
+                string str = "You got the high score!\nHigh Score: " + score;
+                roundResultText.text = str;
+            }
+            else {
+                roundResultText.text = "Your final score was: " + score;
+            }
+            ShowResultsUI(true);
             ScoreManager.EVENT(eScoreEvent.gameLose);
             FloatingScoreHandler(eScoreEvent.gameLose);
         }
