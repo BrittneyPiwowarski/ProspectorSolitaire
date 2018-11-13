@@ -27,7 +27,7 @@ public class FloatingScore : MonoBehaviour{
         }
         set{
             _score = value;
-            scoreString = score.ToString("NO"); // "NO" adds commans to the num
+            scoreString = score.ToString("N0"); // "NO" adds commans to the num
             // Search "C# standard NUmeric Format Strings" for ToString formats
             GetComponent<Text>().text = scoreString;
         }
@@ -47,6 +47,12 @@ public class FloatingScore : MonoBehaviour{
 
     // Set up the FloatingScore and movement
     public void Init(List<Vector2> ePts, float eTimeS = 0, float eTimeD = 1){
+
+        rectTrans = GetComponent<RectTransform>();
+        rectTrans.anchoredPosition = Vector2.zero;
+
+        txt = GetComponent<Text>();
+
         bezierPts = new List<Vector2>(ePts);
 
         if (ePts.Count == 1){   //	If there's only	one	point												
