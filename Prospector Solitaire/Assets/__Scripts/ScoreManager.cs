@@ -71,9 +71,16 @@ public class ScoreManager : MonoBehaviour
                 chain = 0;
                 score += (scoreRun * multiplier);
                 scoreRun = 0;
+                multiplier = 1;
                 break;
 
             case eScoreEvent.mine:
+                chain++;
+                scoreRun += chain;
+                break;
+
+            case eScoreEvent.mineGold:
+                multiplier = 2;
                 chain++;
                 scoreRun += chain;
                 break;
@@ -106,7 +113,7 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    public static int CHAIN { get { return S.chain; } }
+    public static int CHAIN { get { return (S.chain*multiplier); } }
     public static int SCORE { get { return S.score; } }
     public static int SCORE_RUN { get { return S.scoreRun; } }
 }

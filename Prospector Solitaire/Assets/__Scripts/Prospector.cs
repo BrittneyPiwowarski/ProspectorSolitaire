@@ -212,18 +212,16 @@ public class Prospector : MonoBehaviour
     }
 
     // Make cd the new target card
-    void MoveToTarget(CardProspector cd)
-    {
-        // If there is currently a target card, move it to discardPile
-
-        if (cd.gameObject.tag == "GoldCard"
-            && cd.gameObject.GetComponent<CardProspector>().state.ToString() == "Drawpile")
-        {
+    void MoveToTarget(CardProspector cd){
+        
+        if (cd.gameObject.tag == "GoldCard" && cd.gameObject.GetComponent<CardProspector>().state.ToString() == "Drawpile"){
+            Debug.Log("yes");
             cd.gameObject.GetComponent<SpriteRenderer>().sprite = Card_Front_White;
             //There is absolutely a better way to do this but this is what I came up with first lol
             cd.gameObject.GetComponent<CardProspector>().back.GetComponent<SpriteRenderer>().sprite = Card_Back_White;
         }
 
+        // If there is currently a target card, move it to discardPile
         if (target != null) MoveToDiscard(target);
         target = cd; // cd is the new target
         cd.state = eCardState.target;
@@ -310,7 +308,14 @@ public class Prospector : MonoBehaviour
                 tableau.Remove(cd); //  Remove it from the tableau List
                 MoveToTarget(cd); // Make it the target card
                 SetTableauFaces(); // Update tableau card face-ups
-                ScoreManager.EVENT(eScoreEvent.mine);
+
+                if (cd.gameObject.tag == "GoldCard") {
+                    ScoreManager.EVENT(eScoreEvent.mineGold);
+                }
+                else{
+                    ScoreManager.EVENT(eScoreEvent.mine);
+                }
+                
                 FloatingScoreHandler(eScoreEvent.mine);
                 break;
 
@@ -416,6 +421,7 @@ public class Prospector : MonoBehaviour
     void FloatingScoreHandler(eScoreEvent evt)
     {
         List<Vector2> fsPts;
+        FloatingScore fs;
 
         switch (evt)
         {
@@ -440,8 +446,6 @@ public class Prospector : MonoBehaviour
                 break;
 
             case eScoreEvent.mine:
-                // Create a FloatingScore for this score
-                FloatingScore fs;
                 // Move it from the mosePosition to fsPosRun
                 Vector2 p0 = Input.mousePosition;
 
@@ -464,9 +468,7 @@ public class Prospector : MonoBehaviour
                 }
                 break;
             case eScoreEvent.mineGold:
-                ScoreManager.multiplier = 2;
-                // Create a FloatingScore for this score
-                FloatingScore fs1;
+                //ScoreManager.multiplier = 2;
                 // Move it from the mosePosition to fsPosRun
                 Vector2 p1 = Input.mousePosition;
 
@@ -476,7 +478,7 @@ public class Prospector : MonoBehaviour
                 fsPts.Add(p1);
                 fsPts.Add(fsPosMid);
                 fsPts.Add(fsPosRun);
-                fs = Scoreboard.S.CreateFloatingScore(ScoreManager.CHAIN * 2, fsPts);
+                fs = Scoreboard.S.CreateFloatingScore(ScoreManager.CHAIN, fsPts);
                 fs.fontSizes = new List<float>(new float[] { 4, 50, 28 });
                 if (fsRun == null)
                 {
