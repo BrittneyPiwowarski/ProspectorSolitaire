@@ -22,9 +22,7 @@ public class Deck : MonoBehaviour {
 
     // Prefabs
     public GameObject prefabCard;
-    public GameObject prefabGoldCard;
     public GameObject prefabSprite;
-    int randomChance;
 
     [Header("Set Dynamically")]
     public PT_XMLReader xmlr;
@@ -167,18 +165,8 @@ public class Deck : MonoBehaviour {
     }
 
     private Card MakeCard(int cNum){
-        // Create a random number for a 10% chance of being a gold card
-        randomChance = Random.Range(0,10);
-        GameObject cgo;
-
-        if (randomChance == 0){
-            cgo = Instantiate(prefabGoldCard) as GameObject;
-            cgo.gameObject.tag = "GoldCard";
-        }
-        else{
-            cgo = Instantiate(prefabCard) as GameObject;
-        }
-
+        // Create a new Card GameObject
+        GameObject cgo = Instantiate(prefabCard) as GameObject;
         // Set the transform.parent of the new card to the anchor
         cgo.transform.parent = deckAnchor;
         Card card = cgo.GetComponent<Card>(); // Get the Card Component
@@ -292,7 +280,7 @@ public class Deck : MonoBehaviour {
             return; // No need to run if this isn't a face card
         }
 
-        _tGO = Instantiate (prefabSprite) as GameObject;
+        _tGO = Instantiate(prefabSprite) as GameObject;
         _tSR = _tGO.GetComponent<SpriteRenderer>();
 
         // Generate the right name and pass it to GetFace()
@@ -321,13 +309,7 @@ public class Deck : MonoBehaviour {
         // The Card_Back will be able to cover everything else on the card
         _tGO = Instantiate(prefabSprite) as GameObject;
         _tSR = _tGO.GetComponent<SpriteRenderer>();
-        if (randomChance == 0){
-            _tSR.sprite = cardBackGold;
-        }
-        else{
-            _tSR.sprite = cardBack;
-        }
-        
+        _tSR.sprite = cardBack;
         _tGO.transform.SetParent(card.transform);
         _tGO.transform.localPosition = Vector3.zero;
         //This is a higher sortingOrder than anything else

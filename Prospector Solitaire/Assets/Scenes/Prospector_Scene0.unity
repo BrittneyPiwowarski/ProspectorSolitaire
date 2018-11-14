@@ -559,8 +559,6 @@ MonoBehaviour:
   tableau: []
   discardPile: []
   fsRun: {fileID: 0}
-  Card_Front_White: {fileID: 21300000, guid: 873a7658b7ec742228520c7b15510f4d, type: 3}
-  Card_Back_White: {fileID: 21300000, guid: a8185ed8d47594bb8a3b8e2d9233f769, type: 3}
 --- !u!114 &827460515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -612,8 +610,6 @@ MonoBehaviour:
   cardFront: {fileID: 21300000, guid: 873a7658b7ec742228520c7b15510f4d, type: 3}
   cardFrontGold: {fileID: 21300000, guid: 944dc539459fe4109b973bd4c97f68ee, type: 3}
   prefabCard: {fileID: 1331557509169264, guid: cdbdb99c0e561204e86cc9424132f6e7, type: 2}
-  prefabGoldCard: {fileID: 1331557509169264, guid: f438fb7ba8407ac42bbdcf1544565e35,
-    type: 2}
   prefabSprite: {fileID: 1000014090761352, guid: 30a6ba41f0d264815a76b64a60ee0b62,
     type: 2}
   xmlr:

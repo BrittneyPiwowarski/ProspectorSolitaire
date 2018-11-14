@@ -22,7 +22,6 @@ public class ScoreManager : MonoBehaviour {
     public int chain = 0;
     public int scoreRun = 0;
     public int score = 0;
-    public static int multiplier = 1;
 
     void Awake(){
         if (S == null){
@@ -57,7 +56,7 @@ public class ScoreManager : MonoBehaviour {
             case eScoreEvent.gameWin: // Won the round
             case eScoreEvent.gameLose: // Lost the round
                 chain = 0;
-                score += (scoreRun*multiplier);
+                score += scoreRun;
                 scoreRun = 0;
                 break;
 
@@ -87,6 +86,7 @@ public class ScoreManager : MonoBehaviour {
                 }
                 break;
             default:
+                print("score: " + score + " scoreRun: " + scoreRun + " chain: " + chain);
                 break;
         }
     }
