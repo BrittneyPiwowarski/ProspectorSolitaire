@@ -19,6 +19,7 @@ public class Prospector : MonoBehaviour {
     public Vector2 fsPosEnd = new Vector2(0.5f, 0.95f);
     public float reloadDelay = 10f; 
     public Text gameOverText, roundResultText, highScoreText;
+    public int multiplier; // Will multiply by 2 if a gold mine card was hit
 
     [Header("Set Dynamically")]
     public Deck deck;
@@ -29,6 +30,8 @@ public class Prospector : MonoBehaviour {
     public List<CardProspector> tableau;
     public List<CardProspector> discardPile;
     public FloatingScore fsRun;
+    public Sprite Card_Front_White;
+    public Sprite Card_Back_White;
 
     void Awake(){
         S = this; // Set up a Singleton for Prospector 
@@ -78,6 +81,7 @@ public class Prospector : MonoBehaviour {
         layout = GetComponent<Layout>();
         layout.ReadLayout(layoutXML.text);
 
+
         drawPile = ConvertListCardsTOListCardProspectors(deck.cards);
         LayoutGame();
     }
@@ -109,6 +113,7 @@ public class Prospector : MonoBehaviour {
         }
 
         CardProspector cp;
+
         //Follow the layout
         foreach (SlotDef tSD in layout.slotDefs) {
             cp = Draw(); // Pull a card from the top (beginning) of the draw 
@@ -188,6 +193,14 @@ public class Prospector : MonoBehaviour {
     // Make cd the new target card
     void MoveToTarget(CardProspector cd){
         // If there is currently a target card, move it to discardPile
+
+        if (cd.gameObject.tag == "GoldCard" 
+            && cd.gameObject.GetComponent<CardProspector>().state.ToString() == "Drawpile"){
+            cd.gameObject.GetComponent<SpriteRenderer>().sprite = Card_Front_White;
+            //There is absolutely a better way to do this but this is what I came up with first lol
+            cd.gameObject.GetComponent<CardProspector>().back.GetComponent<SpriteRenderer>().sprite = Card_Back_White;
+        }
+
         if (target != null) MoveToDiscard(target);
         target = cd; // cd is the new target
         cd.state = eCardState.target;
@@ -212,6 +225,12 @@ public class Prospector : MonoBehaviour {
         for (int i = 0; i < drawPile.Count; i++){
             cd = drawPile[i];
             cd.transform.parent = layoutAnchor;
+
+            if (cd.gameObject.tag == "GoldCard"){
+                cd.gameObject.GetComponent<SpriteRenderer>().sprite = Card_Front_White;
+                //There is absolutely a better way to do this but this is what I came up with first lol
+                cd.gameObject.GetComponent<CardProspector>().back.GetComponent<SpriteRenderer>().sprite = Card_Back_White;
+            }
 
             // Position it correctly with the layout.drawpile.stagger
             Vector2 dpStagger = layout.drawPile.stagger;
@@ -300,7 +319,6 @@ public class Prospector : MonoBehaviour {
     // Called when the game is over
     void GameOver(bool won){
         int score = ScoreManager.SCORE;
-        Debug.Log(score);
         if (fsRun != null) score += fsRun.score;
 
         if (won){
@@ -395,6 +413,31 @@ public class Prospector : MonoBehaviour {
                     fsRun.reportFinishTo = null;
                 }
                 else{
+                    fs.reportFinishTo = fsRun.gameObject;
+                }
+                break;
+            case eScoreEvent.mineGold:
+                ScoreManager.multiplier = 2;
+                // Create a FloatingScore for this score
+                FloatingScore fs1;
+                // Move it from the mosePosition to fsPosRun
+                Vector2 p1 = Input.mousePosition;
+
+                p1.x /= Screen.width;
+                p1.y /= Screen.height;
+                fsPts = new List<Vector2>();
+                fsPts.Add(p1);
+                fsPts.Add(fsPosMid);
+                fsPts.Add(fsPosRun);
+                fs = Scoreboard.S.CreateFloatingScore(ScoreManager.CHAIN*2, fsPts);
+                fs.fontSizes = new List<float>(new float[] { 4, 50, 28 });
+                if (fsRun == null)
+                {
+                    fsRun = fs;
+                    fsRun.reportFinishTo = null;
+                }
+                else
+                {
                     fs.reportFinishTo = fsRun.gameObject;
                 }
                 break;
